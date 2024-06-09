@@ -37,22 +37,24 @@ namespace delimiter {
     };
 } // namespace delimiter
     using Delimiter = boost::variant<delimiter::Comma, delimiter::Semicolon>;
+
+namespace parentheses {
+    struct Left {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Left&) {
+            return os << "(";
+        }
+    };
+    struct Right {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Right&) {
+            return os << ")";
+        }
+    };
+} // namespace parentheses
+    using Parentheses = boost::variant<parentheses::Left, parentheses::Right>;
 } // namespace token
 } // namespace venezia
-// namespace parentheses {
-//     struct Left {
-//         friend std::ostream&
-//         operator<<(std::ostream& os, const Left&) {
-//             return os << "(";
-//         }
-//     };
-//     struct Right {
-//         friend std::ostream&
-//         operator<<(std::ostream& os, const Right&) {
-//             return os << ")";
-//         }
-//     };
-// } // namespace parentheses
 // namespace brace {
 //     struct Left {
 //         friend std::ostream&

@@ -84,6 +84,48 @@ TEST(LEX, DELIMITER) {
     }
 }
 
+namespace parentheses {
+TEST(LEX, LEFT) {
+    std::string s = "(";
+
+    venezia::token::parentheses::Left decoded;
+    venezia::lexer::parentheses::leftp<std::string::iterator> grammar;
+
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
+
+TEST(LEX, RIGHT) {
+    std::string s = ")";
+
+    venezia::token::parentheses::Right decoded;
+    venezia::lexer::parentheses::rightp<std::string::iterator> grammar;
+
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
+} // namespace parentheses
+
+TEST(LEX, PARENTHESES) {
+    struct Experiment {
+        std::string                 s;
+        venezia::token::Parentheses expected;
+    };
+
+    std::vector<Experiment> experiments {
+          {"(", venezia::token::parentheses::Left{}}
+        , {")", venezia::token::parentheses::Right{}}
+    };
+
+    venezia::lexer::parenthesesp<std::string::const_iterator> grammar;
+    for (const Experiment& experiment : experiments) {
+        const std::string& s = experiment.s;
+
+        venezia::token::Parentheses decoded;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+        EXPECT_EQ(experiment.expected.which(), decoded.which());
+    }
+}
+
 int
 main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
