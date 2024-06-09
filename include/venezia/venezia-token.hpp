@@ -22,22 +22,23 @@ namespace operation {
     };
 } // namespace operation
     using Operation = boost::variant<operation::Assignment, operation::Plus>;
+namespace delimiter {
+    struct Comma {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Comma&) {
+            return os << ",";
+        }
+    };
+    struct Semicolon {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Semicolon&) {
+            return os << ";";
+        }
+    };
+} // namespace delimiter
+    using Delimiter = boost::variant<delimiter::Comma, delimiter::Semicolon>;
 } // namespace token
 } // namespace venezia
-// namespace delimiter {
-//     struct Comma {
-//         friend std::ostream&
-//         operator<<(std::ostream& os, const Comma&) {
-//             return os << ",";
-//         }
-//     };
-//     struct Semicolon {
-//         friend std::ostream&
-//         operator<<(std::ostream& os, const Semicolon&) {
-//             return os << ";";
-//         }
-//     };
-// } // namespace delimiter
 // namespace parentheses {
 //     struct Left {
 //         friend std::ostream&

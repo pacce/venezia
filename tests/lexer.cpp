@@ -44,6 +44,46 @@ TEST(LEX, OPERATION) {
     }
 }
 
+TEST(LEX, COMMA) {
+    std::string s = ",";
+
+    venezia::token::delimiter::Comma decoded;
+    venezia::lexer::commap<std::string::iterator> grammar;
+
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
+
+TEST(LEX, SEMICOLON) {
+    std::string s = ";";
+
+    venezia::token::delimiter::Semicolon decoded;
+    venezia::lexer::semicolonp<std::string::iterator> grammar;
+
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
+
+TEST(LEX, DELIMITER) {
+    struct Experiment {
+        std::string                 s;
+        venezia::token::Delimiter   expected;
+    };
+
+    std::vector<Experiment> experiments {
+          {",", venezia::token::delimiter::Comma{}}
+        , {";", venezia::token::delimiter::Semicolon{}}
+    };
+
+    venezia::lexer::delimiterp<std::string::const_iterator> grammar;
+    for (const Experiment& experiment : experiments) {
+        const std::string& s = experiment.s;
+
+        venezia::token::Delimiter decoded;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+        EXPECT_EQ(experiment.expected.which(), decoded.which());
+    }
+}
+
 int
 main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);

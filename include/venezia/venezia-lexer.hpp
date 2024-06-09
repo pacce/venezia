@@ -37,6 +37,36 @@ namespace lexer {
 
         qi::rule<Iterator, token::Operation> rule;
     };
+
+    template <typename Iterator>
+    struct commap : qi::grammar<Iterator, token::delimiter::Comma> {
+        commap() : commap::base_type(rule) {
+            rule = &qi::lit(",");
+        }
+
+        qi::rule<Iterator, token::delimiter::Comma> rule;
+    };
+
+    template <typename Iterator>
+    struct semicolonp : qi::grammar<Iterator, token::delimiter::Semicolon> {
+        semicolonp() : semicolonp::base_type(rule) {
+            rule = &qi::lit(";");
+        }
+
+        qi::rule<Iterator, token::delimiter::Semicolon> rule;
+    };
+
+    template <typename Iterator>
+    struct delimiterp : qi::grammar<Iterator, token::Delimiter> {
+        delimiterp() : delimiterp::base_type(rule) {
+            rule = comma | semicolon;
+        }
+
+        commap<Iterator>        comma;
+        semicolonp<Iterator>    semicolon;
+
+        qi::rule<Iterator, token::Delimiter> rule;
+    };
 } // namespace lexer
 } // namespace venezia
 // namespace lexer {
