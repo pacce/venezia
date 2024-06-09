@@ -1,47 +1,47 @@
+#include <boost/spirit/include/qi.hpp>
 #include <gtest/gtest.h>
 #include <venezia/venezia.hpp>
 
-TEST(READ, CHAR) {
-    std::string input           = "=+(){},;";
-    std::string::iterator begin = input.begin();
-    std::string::iterator end   = input.end();
+namespace qi = boost::spirit::qi;
 
-    std::optional<char> actual  = std::nullopt;
+TEST(LEX, ASSIGNMENT) {
+    std::string s = "=";
 
-    actual = venezia::lexer::read(begin, end);
-    ASSERT_TRUE(actual);
-    EXPECT_EQ(*actual, '=');
+    venezia::token::operation::Assignment decoded;
+    venezia::lexer::assignmentp<std::string::iterator> grammar;
 
-    actual = venezia::lexer::read(begin, end);
-    ASSERT_TRUE(actual);
-    EXPECT_EQ(*actual, '+');
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
 
-    actual = venezia::lexer::read(begin, end);
-    ASSERT_TRUE(actual);
-    EXPECT_EQ(*actual, '(');
+TEST(LEX, PLUS) {
+    std::string s = "+";
 
-    actual = venezia::lexer::read(begin, end);
-    ASSERT_TRUE(actual);
-    EXPECT_EQ(*actual, ')');
+    venezia::token::operation::Plus decoded;
+    venezia::lexer::plusp<std::string::iterator> grammar;
 
-    actual = venezia::lexer::read(begin, end);
-    ASSERT_TRUE(actual);
-    EXPECT_EQ(*actual, '{');
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
 
-    actual = venezia::lexer::read(begin, end);
-    ASSERT_TRUE(actual);
-    EXPECT_EQ(*actual, '}');
+TEST(LEX, OPERATION) {
+    struct Experiment {
+        std::string                 s;
+        venezia::token::Operation   expected;
+    };
 
-    actual = venezia::lexer::read(begin, end);
-    ASSERT_TRUE(actual);
-    EXPECT_EQ(*actual, ',');
+    std::vector<Experiment> experiments {
+          {"=", venezia::token::operation::Assignment{}}
+        , {"+", venezia::token::operation::Plus{}}
+    };
 
-    actual = venezia::lexer::read(begin, end);
-    ASSERT_TRUE(actual);
-    EXPECT_EQ(*actual, ';');
+    venezia::lexer::operationp<std::string::const_iterator> grammar;
+    for (const Experiment& experiment : experiments) {
+        const std::string& s = experiment.s;
 
-    actual = venezia::lexer::read(begin, end);
-    ASSERT_FALSE(actual);
+        venezia::token::Operation decoded;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+        EXPECT_EQ(experiment.expected.which(), decoded.which());
+    }
 }
 
 int

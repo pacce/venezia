@@ -2,7 +2,7 @@ project('venezia', 'cpp', version: '0.1.0')
 
 sources       = []
 headers       = include_directories('include')
-dependencies  = []
+dependencies  = [dependency('boost')]
 
 venezia_dep = declare_dependency(
     include_directories : headers
