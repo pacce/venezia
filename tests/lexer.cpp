@@ -210,6 +210,36 @@ TEST(LEX, KEYWORD) {
     }
 }
 
+TEST(LEX, TOKEN) {
+    struct Experiment {
+        std::string     s;
+        venezia::Token  expected;
+    };
+
+    std::vector<Experiment> experiments {
+          {  "=", venezia::token::operation::Assignment{}}
+        , {  "+", venezia::token::operation::Plus{}}
+        , {  ",", venezia::token::delimiter::Comma{}}
+        , {  ";", venezia::token::delimiter::Semicolon{}}
+        , {  "(", venezia::token::parentheses::Left{}}
+        , {  ")", venezia::token::parentheses::Right{}}
+        , {  "{", venezia::token::brace::Left{}}
+        , {  "}", venezia::token::brace::Right{}}
+        , { "fn", venezia::token::keyword::Function{}}
+        , {"let", venezia::token::keyword::Let{}}
+    };
+
+    venezia::lexer::lexerp<std::string::const_iterator> grammar;
+    for (const Experiment& experiment : experiments) {
+        const std::string& s = experiment.s;
+
+        venezia::Token decoded;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+        EXPECT_EQ(experiment.expected.which(), decoded.which());
+    }
+}
+
 int
 main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);

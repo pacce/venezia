@@ -157,6 +157,27 @@ namespace keyword {
         keyword::letp<Iterator>             let;
         qi::rule<Iterator, token::Keyword>  rule;
     };
+
+    template <typename Iterator>
+    struct lexerp : qi::grammar<Iterator, Token> {
+        lexerp() : lexerp::base_type(rule) {
+            rule 
+                = operation
+                | delimiter
+                | parentheses
+                | brace
+                | keyword
+                ;
+        }
+
+        lexer::operationp<Iterator>     operation;
+        lexer::delimiterp<Iterator>     delimiter;
+        lexer::parenthesesp<Iterator>   parentheses;
+        lexer::bracep<Iterator>         brace;
+        lexer::keywordp<Iterator>       keyword;
+
+        qi::rule<Iterator, Token>       rule;
+    };
 } // namespace lexer
 } // namespace venezia
 
