@@ -70,7 +70,6 @@ namespace delimiter {
 
         qi::rule<Iterator, token::Delimiter> rule;
     };
-
 namespace parentheses {
     template <typename Iterator>
     struct leftp : qi::grammar<Iterator, token::parentheses::Left> {
@@ -99,6 +98,35 @@ namespace parentheses {
         parentheses::leftp<Iterator>    left;
         parentheses::rightp<Iterator>   right;
         qi::rule<Iterator, token::Parentheses> rule;
+    };
+namespace brace {
+    template <typename Iterator>
+    struct leftp : qi::grammar<Iterator, token::brace::Left> {
+        leftp() : leftp::base_type(rule) {
+            rule = &qi::lit("{");
+        }
+
+        qi::rule<Iterator, token::brace::Left> rule;
+    };
+
+    template <typename Iterator>
+    struct rightp : qi::grammar<Iterator, token::brace::Right> {
+        rightp() : rightp::base_type(rule) {
+            rule = &qi::lit("}");
+        }
+
+        qi::rule<Iterator, token::brace::Right> rule;
+    };
+} // namespace brace
+    template <typename Iterator>
+    struct bracep : qi::grammar<Iterator, token::Brace> {
+        bracep() : bracep::base_type(rule) {
+            rule = left | right;
+        }
+
+        brace::leftp<Iterator>    left;
+        brace::rightp<Iterator>   right;
+        qi::rule<Iterator, token::Brace> rule;
     };
 } // namespace lexer
 } // namespace venezia

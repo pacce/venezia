@@ -85,23 +85,23 @@ TEST(LEX, DELIMITER) {
 }
 
 namespace parentheses {
-TEST(LEX, LEFT) {
-    std::string s = "(";
+    TEST(LEX, LEFT) {
+        std::string s = "(";
 
-    venezia::token::parentheses::Left decoded;
-    venezia::lexer::parentheses::leftp<std::string::iterator> grammar;
+        venezia::token::parentheses::Left decoded;
+        venezia::lexer::parentheses::leftp<std::string::iterator> grammar;
 
-    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
-}
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
 
-TEST(LEX, RIGHT) {
-    std::string s = ")";
+    TEST(LEX, RIGHT) {
+        std::string s = ")";
 
-    venezia::token::parentheses::Right decoded;
-    venezia::lexer::parentheses::rightp<std::string::iterator> grammar;
+        venezia::token::parentheses::Right decoded;
+        venezia::lexer::parentheses::rightp<std::string::iterator> grammar;
 
-    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
-}
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
 } // namespace parentheses
 
 TEST(LEX, PARENTHESES) {
@@ -120,6 +120,48 @@ TEST(LEX, PARENTHESES) {
         const std::string& s = experiment.s;
 
         venezia::token::Parentheses decoded;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+        EXPECT_EQ(experiment.expected.which(), decoded.which());
+    }
+}
+
+namespace brace {
+    TEST(LEX, LEFT) {
+        std::string s = "{";
+
+        venezia::token::brace::Left decoded;
+        venezia::lexer::brace::leftp<std::string::iterator> grammar;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
+
+    TEST(LEX, RIGHT) {
+        std::string s = "}";
+
+        venezia::token::brace::Right decoded;
+        venezia::lexer::brace::rightp<std::string::iterator> grammar;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
+} // namespace brace
+
+TEST(LEX, BRACE) {
+    struct Experiment {
+        std::string             s;
+        venezia::token::Brace   expected;
+    };
+
+    std::vector<Experiment> experiments {
+          {"{", venezia::token::brace::Left{}}
+        , {"}", venezia::token::brace::Right{}}
+    };
+
+    venezia::lexer::bracep<std::string::const_iterator> grammar;
+    for (const Experiment& experiment : experiments) {
+        const std::string& s = experiment.s;
+
+        venezia::token::Brace decoded;
 
         ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
         EXPECT_EQ(experiment.expected.which(), decoded.which());

@@ -53,22 +53,23 @@ namespace parentheses {
     };
 } // namespace parentheses
     using Parentheses = boost::variant<parentheses::Left, parentheses::Right>;
+namespace brace {
+    struct Left {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Left&) {
+            return os << "{";
+        }
+    };
+    struct Right {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Right&) {
+            return os << "}";
+        }
+    };
+} // namespace brace
+    using Brace = boost::variant<brace::Left, brace::Right>;
 } // namespace token
 } // namespace venezia
-// namespace brace {
-//     struct Left {
-//         friend std::ostream&
-//         operator<<(std::ostream& os, const Left&) {
-//             return os << "{";
-//         }
-//     };
-//     struct Right {
-//         friend std::ostream&
-//         operator<<(std::ostream& os, const Right&) {
-//             return os << "}";
-//         }
-//     };
-// } // namespace brace
 // namespace keyword {
 //     struct Function {
 //         friend std::ostream&
