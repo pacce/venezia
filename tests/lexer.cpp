@@ -168,6 +168,48 @@ TEST(LEX, BRACE) {
     }
 }
 
+namespace keyword {
+    TEST(LEX, FUNCTION) {
+        std::string s = "fn";
+
+        venezia::token::keyword::Function decoded;
+        venezia::lexer::keyword::functionp<std::string::iterator> grammar;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
+
+    TEST(LEX, LET) {
+        std::string s = "let";
+
+        venezia::token::keyword::Let decoded;
+        venezia::lexer::keyword::letp<std::string::iterator> grammar;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
+} // namespace keyword
+
+TEST(LEX, KEYWORD) {
+    struct Experiment {
+        std::string             s;
+        venezia::token::Keyword expected;
+    };
+
+    std::vector<Experiment> experiments {
+          {"fn", venezia::token::keyword::Function{}}
+        , {"let", venezia::token::keyword::Let{}}
+    };
+
+    venezia::lexer::keywordp<std::string::const_iterator> grammar;
+    for (const Experiment& experiment : experiments) {
+        const std::string& s = experiment.s;
+
+        venezia::token::Keyword decoded;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+        EXPECT_EQ(experiment.expected.which(), decoded.which());
+    }
+}
+
 int
 main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);

@@ -68,37 +68,23 @@ namespace brace {
     };
 } // namespace brace
     using Brace = boost::variant<brace::Left, brace::Right>;
+namespace keyword {
+    struct Function {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Function&) {
+            return os << "fn";
+        }
+    };
+    struct Let {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Let&) {
+            return os << "let";
+        }
+    };
+} // namespace keyword
+    using Keyword = boost::variant<keyword::Function, keyword::Let>;
 } // namespace token
 } // namespace venezia
-// namespace keyword {
-//     struct Function {
-//         friend std::ostream&
-//         operator<<(std::ostream& os, const Function&) {
-//             return os << "fn";
-//         }
-//     };
-//     struct Let {
-//         friend std::ostream&
-//         operator<<(std::ostream& os, const Let&) {
-//             return os << "let";
-//         }
-//     };
-// } // namespace keyword
-//     struct Illegal {
-//         char value;
-// 
-//         friend std::ostream&
-//         operator<<(std::ostream& os, const Illegal& v) {
-//             return os << "illegal: " << v.value;
-//         }
-//     };
-// 
-//     struct End {
-//         friend std::ostream&
-//         operator<<(std::ostream& os, const End&) {
-//             return os << "EOF";
-//         }
-//     };
 // } // namespace token
 //     using Token = std::variant<
 //           token::Illegal

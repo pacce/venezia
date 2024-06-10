@@ -128,6 +128,35 @@ namespace brace {
         brace::rightp<Iterator>   right;
         qi::rule<Iterator, token::Brace> rule;
     };
+namespace keyword {
+    template <typename Iterator>
+    struct functionp : qi::grammar<Iterator, token::keyword::Function> {
+        functionp() : functionp::base_type(rule) {
+            rule = &qi::lit("fn");
+        }
+
+        qi::rule<Iterator, token::keyword::Function> rule;
+    };
+
+    template <typename Iterator>
+    struct letp : qi::grammar<Iterator, token::keyword::Let> {
+        letp() : letp::base_type(rule) {
+            rule = &qi::lit("let");
+        }
+
+        qi::rule<Iterator, token::keyword::Let> rule;
+    };
+} // namespace keyword
+    template <typename Iterator>
+    struct keywordp : qi::grammar<Iterator, token::Keyword> {
+        keywordp() : keywordp::base_type(rule) {
+            rule = function | let;
+        }
+
+        keyword::functionp<Iterator>        function;
+        keyword::letp<Iterator>             let;
+        qi::rule<Iterator, token::Keyword>  rule;
+    };
 } // namespace lexer
 } // namespace venezia
 
