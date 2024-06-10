@@ -8,6 +8,7 @@ namespace venezia {
 namespace lexer {
     namespace qi = boost::spirit::qi;
 
+namespace operation {
     template <typename Iterator>
     struct assignmentp : qi::grammar<Iterator, token::operation::Assignment> {
         assignmentp() : assignmentp::base_type(rule) {
@@ -25,19 +26,20 @@ namespace lexer {
 
         qi::rule<Iterator, token::operation::Plus> rule;
     };
-
+} // namespace operation
     template <typename Iterator>
     struct operationp : qi::grammar<Iterator, token::Operation> {
         operationp() : operationp::base_type(rule) {
             rule = assignment | plus;
         }
 
-        assignmentp<Iterator>   assignment;
-        plusp<Iterator>         plus;
+        operation::assignmentp<Iterator>    assignment;
+        operation::plusp<Iterator>          plus;
 
         qi::rule<Iterator, token::Operation> rule;
     };
 
+namespace delimiter {
     template <typename Iterator>
     struct commap : qi::grammar<Iterator, token::delimiter::Comma> {
         commap() : commap::base_type(rule) {
@@ -55,6 +57,7 @@ namespace lexer {
 
         qi::rule<Iterator, token::delimiter::Semicolon> rule;
     };
+} // namespace delimiter
 
     template <typename Iterator>
     struct delimiterp : qi::grammar<Iterator, token::Delimiter> {
@@ -62,8 +65,8 @@ namespace lexer {
             rule = comma | semicolon;
         }
 
-        commap<Iterator>        comma;
-        semicolonp<Iterator>    semicolon;
+        delimiter::commap<Iterator>     comma;
+        delimiter::semicolonp<Iterator> semicolon;
 
         qi::rule<Iterator, token::Delimiter> rule;
     };

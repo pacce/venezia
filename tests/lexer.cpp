@@ -8,7 +8,7 @@ TEST(LEX, ASSIGNMENT) {
     std::string s = "=";
 
     venezia::token::operation::Assignment decoded;
-    venezia::lexer::assignmentp<std::string::iterator> grammar;
+    venezia::lexer::operation::assignmentp<std::string::iterator> grammar;
 
     ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
 }
@@ -17,7 +17,7 @@ TEST(LEX, PLUS) {
     std::string s = "+";
 
     venezia::token::operation::Plus decoded;
-    venezia::lexer::plusp<std::string::iterator> grammar;
+    venezia::lexer::operation::plusp<std::string::iterator> grammar;
 
     ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
 }
@@ -48,7 +48,7 @@ TEST(LEX, COMMA) {
     std::string s = ",";
 
     venezia::token::delimiter::Comma decoded;
-    venezia::lexer::commap<std::string::iterator> grammar;
+    venezia::lexer::delimiter::commap<std::string::iterator> grammar;
 
     ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
 }
@@ -57,7 +57,7 @@ TEST(LEX, SEMICOLON) {
     std::string s = ";";
 
     venezia::token::delimiter::Semicolon decoded;
-    venezia::lexer::semicolonp<std::string::iterator> grammar;
+    venezia::lexer::delimiter::semicolonp<std::string::iterator> grammar;
 
     ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
 }
