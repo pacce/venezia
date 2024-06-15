@@ -23,6 +23,60 @@ TEST(LEX, PLUS) {
     ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
 }
 
+TEST(LEX, MINUS) {
+    std::string s = "-";
+
+    venezia::token::operation::Minus decoded;
+    venezia::lexer::operation::minusp<std::string::iterator> grammar;
+
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
+
+TEST(LEX, BANG) {
+    std::string s = "!";
+
+    venezia::token::operation::Bang decoded;
+    venezia::lexer::operation::bangp<std::string::iterator> grammar;
+
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
+
+TEST(LEX, ASTERISK) {
+    std::string s = "*";
+
+    venezia::token::operation::Asterisk decoded;
+    venezia::lexer::operation::asteriskp<std::string::iterator> grammar;
+
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
+
+TEST(LEX, SLASH) {
+    std::string s = "/";
+
+    venezia::token::operation::Slash decoded;
+    venezia::lexer::operation::slashp<std::string::iterator> grammar;
+
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
+
+TEST(LEX, LESSER) {
+    std::string s = "<";
+
+    venezia::token::operation::Lesser decoded;
+    venezia::lexer::operation::lesserp<std::string::iterator> grammar;
+
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
+
+TEST(LEX, GREATER) {
+    std::string s = ">";
+
+    venezia::token::operation::Greater decoded;
+    venezia::lexer::operation::greaterp<std::string::iterator> grammar;
+
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+}
+
 TEST(LEX, OPERATION) {
     struct Experiment {
         std::string                 s;
@@ -32,6 +86,12 @@ TEST(LEX, OPERATION) {
     std::vector<Experiment> experiments {
           {"=", venezia::token::operation::Assignment{}}
         , {"+", venezia::token::operation::Plus{}}
+        , {"-", venezia::token::operation::Minus{}}
+        , {"!", venezia::token::operation::Bang{}}
+        , {"*", venezia::token::operation::Asterisk{}}
+        , {"/", venezia::token::operation::Slash{}}
+        , {"<", venezia::token::operation::Lesser{}}
+        , {">", venezia::token::operation::Greater{}}
     };
 
     venezia::lexer::operationp<std::string::const_iterator> grammar;

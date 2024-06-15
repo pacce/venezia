@@ -20,8 +20,59 @@ namespace operation {
             return os << "+";
         }
     };
+
+    struct Minus {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Minus&) {
+            return os << "-";
+        }
+    };
+
+    struct Bang {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Bang&) {
+            return os << "!";
+        }
+    };
+
+    struct Asterisk {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Asterisk&) {
+            return os << "*";
+        }
+    };
+
+    struct Slash {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Slash&) {
+            return os << "/";
+        }
+    };
+
+    struct Lesser {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Lesser&) {
+            return os << "<";
+        }
+    };
+
+    struct Greater {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Greater&) {
+            return os << ">";
+        }
+    };
 } // namespace operation
-    using Operation = boost::variant<operation::Assignment, operation::Plus>;
+    using Operation = boost::variant<
+          operation::Assignment
+        , operation::Plus
+        , operation::Minus
+        , operation::Bang
+        , operation::Asterisk
+        , operation::Slash
+        , operation::Lesser
+        , operation::Greater
+        >;
 namespace delimiter {
     struct Comma {
         friend std::ostream&

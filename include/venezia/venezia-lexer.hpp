@@ -26,15 +26,83 @@ namespace operation {
 
         qi::rule<Iterator, token::operation::Plus> rule;
     };
+
+    template <typename Iterator>
+    struct minusp : qi::grammar<Iterator, token::operation::Minus> {
+        minusp() : minusp::base_type(rule) {
+            rule = "-" >> qi::attr(token::operation::Minus{});
+        }
+
+        qi::rule<Iterator, token::operation::Minus> rule;
+    };
+
+    template <typename Iterator>
+    struct bangp : qi::grammar<Iterator, token::operation::Bang> {
+        bangp() : bangp::base_type(rule) {
+            rule = "!" >> qi::attr(token::operation::Bang{});
+        }
+
+        qi::rule<Iterator, token::operation::Bang> rule;
+    };
+
+    template <typename Iterator>
+    struct asteriskp : qi::grammar<Iterator, token::operation::Asterisk> {
+        asteriskp() : asteriskp::base_type(rule) {
+            rule = "*" >> qi::attr(token::operation::Asterisk{});
+        }
+
+        qi::rule<Iterator, token::operation::Asterisk> rule;
+    };
+
+    template <typename Iterator>
+    struct slashp : qi::grammar<Iterator, token::operation::Slash> {
+        slashp() : slashp::base_type(rule) {
+            rule = "/" >> qi::attr(token::operation::Slash{});
+        }
+
+        qi::rule<Iterator, token::operation::Slash> rule;
+    };
+
+    template <typename Iterator>
+    struct lesserp : qi::grammar<Iterator, token::operation::Lesser> {
+        lesserp() : lesserp::base_type(rule) {
+            rule = "<" >> qi::attr(token::operation::Lesser{});
+        }
+
+        qi::rule<Iterator, token::operation::Lesser> rule;
+    };
+
+    template <typename Iterator>
+    struct greaterp : qi::grammar<Iterator, token::operation::Greater> {
+        greaterp() : greaterp::base_type(rule) {
+            rule = ">" >> qi::attr(token::operation::Greater{});
+        }
+
+        qi::rule<Iterator, token::operation::Greater> rule;
+    };
 } // namespace operation
     template <typename Iterator>
     struct operationp : qi::grammar<Iterator, token::Operation> {
         operationp() : operationp::base_type(rule) {
-            rule = assignment | plus;
+            rule = assignment 
+                | plus 
+                | minus
+                | bang
+                | asterisk
+                | slash
+                | lesser
+                | greater
+                ;
         }
 
         operation::assignmentp<Iterator>    assignment;
         operation::plusp<Iterator>          plus;
+        operation::minusp<Iterator>         minus;
+        operation::bangp<Iterator>          bang;
+        operation::asteriskp<Iterator>      asterisk;
+        operation::slashp<Iterator>         slash;
+        operation::lesserp<Iterator>        lesser;
+        operation::greaterp<Iterator>       greater;
 
         qi::rule<Iterator, token::Operation> rule;
     };
