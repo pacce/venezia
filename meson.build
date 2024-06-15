@@ -1,4 +1,4 @@
-project('venezia', 'cpp', version: '0.1.0')
+project('venezia', 'cpp', version: '0.1.0', default_options : ['warning_level=3', 'cpp_std=c++23'])
 
 sources       = []
 headers       = include_directories('include')

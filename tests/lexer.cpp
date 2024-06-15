@@ -1,5 +1,6 @@
 #include <boost/spirit/include/qi.hpp>
 #include <gtest/gtest.h>
+#include <ranges>
 #include <venezia/venezia.hpp>
 
 namespace qi = boost::spirit::qi;
@@ -237,6 +238,31 @@ TEST(LEX, TOKEN) {
 
         ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
         EXPECT_EQ(experiment.expected.which(), decoded.which());
+    }
+}
+
+TEST(LEX, TOKENS) {
+    venezia::Tokens  expected = {
+          venezia::token::operation::Assignment{}
+        , venezia::token::operation::Plus{}
+        , venezia::token::delimiter::Comma{}
+        , venezia::token::delimiter::Semicolon{}
+        , venezia::token::parentheses::Left{}
+        , venezia::token::parentheses::Right{}
+        , venezia::token::brace::Left{}
+        , venezia::token::brace::Right{}
+        , venezia::token::keyword::Function{}
+        , venezia::token::keyword::Let{}
+    };
+    venezia::Tokens  decoded;
+
+    std::string s = "=+,;(){}fnlet";
+    venezia::lexer::lexersp<std::string::iterator> grammar;
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+
+    EXPECT_EQ(expected.size(), decoded.size());
+    for (std::pair<venezia::Token&, venezia::Token&> element : std::views::zip(expected, decoded)) {
+        EXPECT_EQ(element.first.which(), element.second.which());
     }
 }
 

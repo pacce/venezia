@@ -12,7 +12,7 @@ namespace operation {
     template <typename Iterator>
     struct assignmentp : qi::grammar<Iterator, token::operation::Assignment> {
         assignmentp() : assignmentp::base_type(rule) {
-            rule = &qi::lit("=");
+            rule = "=" >> qi::attr(token::operation::Assignment{});
         }
 
         qi::rule<Iterator, token::operation::Assignment> rule;
@@ -21,7 +21,7 @@ namespace operation {
     template <typename Iterator>
     struct plusp : qi::grammar<Iterator, token::operation::Plus> {
         plusp() : plusp::base_type(rule) {
-            rule = &qi::lit("+");
+            rule = "+" >> qi::attr(token::operation::Plus{});
         }
 
         qi::rule<Iterator, token::operation::Plus> rule;
@@ -43,7 +43,7 @@ namespace delimiter {
     template <typename Iterator>
     struct commap : qi::grammar<Iterator, token::delimiter::Comma> {
         commap() : commap::base_type(rule) {
-            rule = &qi::lit(",");
+            rule = "," >> qi::attr(token::delimiter::Comma{});
         }
 
         qi::rule<Iterator, token::delimiter::Comma> rule;
@@ -52,7 +52,7 @@ namespace delimiter {
     template <typename Iterator>
     struct semicolonp : qi::grammar<Iterator, token::delimiter::Semicolon> {
         semicolonp() : semicolonp::base_type(rule) {
-            rule = &qi::lit(";");
+            rule = ";" >> qi::attr(token::delimiter::Semicolon{});
         }
 
         qi::rule<Iterator, token::delimiter::Semicolon> rule;
@@ -74,7 +74,7 @@ namespace parentheses {
     template <typename Iterator>
     struct leftp : qi::grammar<Iterator, token::parentheses::Left> {
         leftp() : leftp::base_type(rule) {
-            rule = &qi::lit("(");
+            rule = "(" >> qi::attr(token::parentheses::Left{});
         }
 
         qi::rule<Iterator, token::parentheses::Left> rule;
@@ -83,7 +83,7 @@ namespace parentheses {
     template <typename Iterator>
     struct rightp : qi::grammar<Iterator, token::parentheses::Right> {
         rightp() : rightp::base_type(rule) {
-            rule = &qi::lit(")");
+            rule = ")" >> qi::attr(token::parentheses::Right{});
         }
 
         qi::rule<Iterator, token::parentheses::Right> rule;
@@ -103,7 +103,7 @@ namespace brace {
     template <typename Iterator>
     struct leftp : qi::grammar<Iterator, token::brace::Left> {
         leftp() : leftp::base_type(rule) {
-            rule = &qi::lit("{");
+            rule = "{" >> qi::attr(token::brace::Left{});
         }
 
         qi::rule<Iterator, token::brace::Left> rule;
@@ -112,7 +112,7 @@ namespace brace {
     template <typename Iterator>
     struct rightp : qi::grammar<Iterator, token::brace::Right> {
         rightp() : rightp::base_type(rule) {
-            rule = &qi::lit("}");
+            rule = "}" >> qi::attr(token::brace::Right{});
         }
 
         qi::rule<Iterator, token::brace::Right> rule;
@@ -132,7 +132,7 @@ namespace keyword {
     template <typename Iterator>
     struct functionp : qi::grammar<Iterator, token::keyword::Function> {
         functionp() : functionp::base_type(rule) {
-            rule = &qi::lit("fn");
+            rule = "fn" >> qi::attr(token::keyword::Function{});
         }
 
         qi::rule<Iterator, token::keyword::Function> rule;
@@ -141,7 +141,7 @@ namespace keyword {
     template <typename Iterator>
     struct letp : qi::grammar<Iterator, token::keyword::Let> {
         letp() : letp::base_type(rule) {
-            rule = &qi::lit("let");
+            rule = "let" >> qi::attr(token::keyword::Let{});
         }
 
         qi::rule<Iterator, token::keyword::Let> rule;
@@ -177,6 +177,16 @@ namespace keyword {
         lexer::keywordp<Iterator>       keyword;
 
         qi::rule<Iterator, Token>       rule;
+    };
+
+    template <typename Iterator>
+    struct lexersp : qi::grammar<Iterator, Tokens> {
+        lexersp() : lexersp::base_type(rule) {
+            rule = qi::repeat[lexer];
+        }
+
+        lexerp<Iterator>            lexer;
+        qi::rule<Iterator, Tokens>  rule;
     };
 } // namespace lexer
 } // namespace venezia

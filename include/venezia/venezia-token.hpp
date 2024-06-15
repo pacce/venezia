@@ -29,6 +29,7 @@ namespace delimiter {
             return os << ",";
         }
     };
+
     struct Semicolon {
         friend std::ostream&
         operator<<(std::ostream& os, const Semicolon&) {
@@ -45,6 +46,7 @@ namespace parentheses {
             return os << "(";
         }
     };
+
     struct Right {
         friend std::ostream&
         operator<<(std::ostream& os, const Right&) {
@@ -60,6 +62,7 @@ namespace brace {
             return os << "{";
         }
     };
+
     struct Right {
         friend std::ostream&
         operator<<(std::ostream& os, const Right&) {
@@ -75,6 +78,7 @@ namespace keyword {
             return os << "fn";
         }
     };
+
     struct Let {
         friend std::ostream&
         operator<<(std::ostream& os, const Let&) {
@@ -91,61 +95,46 @@ namespace keyword {
         , token::Brace
         , token::Keyword
     >;
-namespace token {
-    // struct is_assignment {
-    //     bool operator()(const operation::Assignment&)   { return true; }
-    //     template <typename T> bool operator()(const T&) { return false; }
-    // };
 
-    // struct is_plus {
-    //     bool operator()(const operation::Plus&)         { return true; }
-    //     template <typename T> bool operator()(const T&) { return false; }
-    // };
+    struct Tokens {
+        std::vector<Token> content;
 
-    // struct is_comma {
-    //     bool operator()(const delimiter::Comma&)        { return true; }
-    //     template <typename T> bool operator()(const T&) { return false; }
-    // };
+        Tokens() {}
+        Tokens(const std::vector<Token>& c) : content(c) {}
+        Tokens(std::initializer_list<Token> c) : content(c) {}
 
-    // struct is_semicolon {
-    //     bool operator()(const delimiter::Semicolon&)    { return true; }
-    //     template <typename T> bool operator()(const T&) { return false; }
-    // };
+        typedef typename std::vector<Token>::value_type value_type;
+        typedef typename std::vector<Token>::size_type  size_type;
 
-    // struct is_parentheses {
-    //     bool operator()(const parentheses::Left&)       { return true; }
-    //     bool operator()(const parentheses::Right&)      { return true; }
-    //     template <typename T> bool operator()(const T&) { return false; }
-    // };
+        typedef typename std::vector<Token>::iterator               iterator;
+        typedef typename std::vector<Token>::const_iterator         const_iterator;
+        typedef typename std::vector<Token>::reverse_iterator       reverse_iterator;
+        typedef typename std::vector<Token>::const_reverse_iterator const_reverse_iterator;
 
-    // struct is_brace {
-    //     bool operator()(const brace::Left&)             { return true; }
-    //     bool operator()(const brace::Right&)            { return true; }
-    //     template <typename T> bool operator()(const T&) { return false; }
-    // };
+        iterator begin()                        { return content.begin(); }
+        iterator end()                          { return content.end(); }
+        const_iterator begin() const            { return content.begin(); }
+        const_iterator end() const              { return content.end(); }
+        reverse_iterator rbegin()               { return content.rbegin(); }
+        reverse_iterator rend()                 { return content.rend(); }
+        const_reverse_iterator rbegin() const   { return content.rbegin(); }
+        const_reverse_iterator rend() const     { return content.rend(); }
 
-    // struct is_left {
-    //     bool operator()(const parentheses::Left&)       { return true; }
-    //     bool operator()(const brace::Left&)             { return true; }
-    //     template <typename T> bool operator()(const T&) { return false; }
-    // };
+        size_type
+        size() const {
+            return content.size();
+        }
 
-    // struct is_right {
-    //     bool operator()(const parentheses::Right&)      { return true; }
-    //     bool operator()(const brace::Right&)            { return true; }
-    //     template <typename T> bool operator()(const T&) { return false; }
-    // };
+        void
+        insert(iterator pos, value_type value) {
+            content.insert(pos, value);
+        }
 
-    // struct is_function {
-    //     bool operator()(const keyword::Function&)       { return true; }
-    //     template <typename T> bool operator()(const T&) { return false; }
-    // };
-
-    // struct is_let {
-    //     bool operator()(const keyword::Let&)            { return true; }
-    //     template <typename T> bool operator()(const T&) { return false; }
-    // };
-} // namespace token
+        void
+        push_back(value_type value) {
+            content.push_back(value);
+        }
+    };
 } // namespace venezia
 
 #endif // VENEZIA_TOKEN_HPP__
