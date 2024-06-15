@@ -159,6 +159,18 @@ namespace keyword {
     };
 
     template <typename Iterator>
+    struct identifierp : qi::grammar<Iterator, token::Identifier> {
+        identifierp() : identifierp::base_type(rule) {
+            word    = +(qi::alpha | qi::char_("_"));
+            number  = +(qi::digit);
+            rule    = word | number;
+        }
+        qi::rule<Iterator, std::string()>       word;
+        qi::rule<Iterator, std::string()>       number;
+        qi::rule<Iterator, token::Identifier>   rule;
+    };
+
+    template <typename Iterator>
     struct lexerp : qi::grammar<Iterator, Token> {
         lexerp() : lexerp::base_type(rule) {
             rule 

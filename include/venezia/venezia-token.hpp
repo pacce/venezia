@@ -87,6 +87,25 @@ namespace keyword {
     };
 } // namespace keyword
     using Keyword = boost::variant<keyword::Function, keyword::Let>;
+
+    struct Identifier {
+        std::string content;
+
+        friend std::ostream&
+        operator<<(std::ostream& os, const Identifier& identifier) {
+            return os << "identifier: " << identifier.content;
+        }
+
+        friend bool
+        operator==(const Identifier& lhs, const Identifier& rhs) {
+            return lhs.content == rhs.content;
+        }
+
+        friend bool
+        operator!=(const Identifier& lhs, const Identifier& rhs) {
+            return lhs.content != rhs.content;
+        }
+    };
 } // namespace token
     using Token = boost::variant<
           token::Operation
@@ -94,6 +113,7 @@ namespace keyword {
         , token::Parentheses
         , token::Brace
         , token::Keyword
+        , token::Identifier
     >;
 
     struct Tokens {

@@ -211,6 +211,31 @@ TEST(LEX, KEYWORD) {
     }
 }
 
+TEST(LEX, IDENTIFIER) {
+    struct Experiment {
+        std::string                 s;
+        venezia::token::Identifier  expected;
+    };
+
+    std::vector<Experiment> experiments = {
+          { "ten",  venezia::token::Identifier{"ten"}}
+        , {  "10",   venezia::token::Identifier{"10"}}
+        , {"five", venezia::token::Identifier{"five"}}
+        , {   "5",    venezia::token::Identifier{"5"}}
+        , { "add",  venezia::token::Identifier{"add"}}
+    };
+
+    venezia::lexer::identifierp<std::string::const_iterator> grammar;
+    for (const Experiment& experiment : experiments) {
+        const std::string& s = experiment.s;
+
+        venezia::token::Identifier decoded;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+        EXPECT_EQ(experiment.expected, decoded);
+    }
+}
+
 TEST(LEX, TOKEN) {
     struct Experiment {
         std::string     s;
