@@ -247,6 +247,7 @@ namespace keyword {
                 | parentheses
                 | brace
                 | keyword
+                | identifier
                 ;
         }
 
@@ -255,6 +256,7 @@ namespace keyword {
         lexer::parenthesesp<Iterator>   parentheses;
         lexer::bracep<Iterator>         brace;
         lexer::keywordp<Iterator>       keyword;
+        lexer::identifierp<Iterator>    identifier;
 
         qi::rule<Iterator, Token>       rule;
     };
@@ -262,7 +264,7 @@ namespace keyword {
     template <typename Iterator>
     struct lexersp : qi::grammar<Iterator, Tokens> {
         lexersp() : lexersp::base_type(rule) {
-            rule = qi::repeat[lexer];
+            rule = qi::repeat[qi::skip(qi::space)[lexer]];
         }
 
         lexerp<Iterator>            lexer;

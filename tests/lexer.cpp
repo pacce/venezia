@@ -351,6 +351,71 @@ TEST(LEX, TOKENS) {
     }
 }
 
+TEST(LEX, SOURCE) {
+    venezia::Tokens  expected = {
+          venezia::token::keyword::Let{}
+        , venezia::token::Identifier{"five"}
+        , venezia::token::operation::Assignment{}
+        , venezia::token::Identifier{"5"}
+        , venezia::token::delimiter::Semicolon{}
+
+        , venezia::token::keyword::Let{}
+        , venezia::token::Identifier{"ten"}
+        , venezia::token::operation::Assignment{}
+        , venezia::token::Identifier{"10"}
+        , venezia::token::delimiter::Semicolon{}
+
+        , venezia::token::keyword::Let{}
+        , venezia::token::Identifier{"add"}
+        , venezia::token::operation::Assignment{}
+        , venezia::token::keyword::Function{}
+        , venezia::token::parentheses::Left{}
+        , venezia::token::Identifier{"x"}
+        , venezia::token::delimiter::Comma{}
+        , venezia::token::Identifier{"y"}
+        , venezia::token::parentheses::Right{}
+        , venezia::token::brace::Left{}
+
+        , venezia::token::Identifier{"x"}
+        , venezia::token::operation::Plus{}
+        , venezia::token::Identifier{"y"}
+        , venezia::token::delimiter::Semicolon{}
+
+        , venezia::token::brace::Right{}
+        , venezia::token::delimiter::Semicolon{}
+
+        , venezia::token::keyword::Let{}
+        , venezia::token::Identifier{"result"}
+        , venezia::token::operation::Assignment{}
+        , venezia::token::Identifier{"add"}
+        , venezia::token::parentheses::Left{}
+        , venezia::token::Identifier{"five"}
+        , venezia::token::delimiter::Comma{}
+        , venezia::token::Identifier{"ten"}
+        , venezia::token::parentheses::Right{}
+        , venezia::token::delimiter::Semicolon{}
+    };
+    venezia::Tokens  decoded;
+
+    std::string s = 
+        "let five = 5;"
+        "let ten = 10;"
+        ""
+        "let add = fn(x, y) {"
+        "   x + y;"
+        "};"
+        ""
+        "let result = add(five, ten);"
+        ;
+    venezia::lexer::lexersp<std::string::iterator> grammar;
+    ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+
+    EXPECT_EQ(expected.size(), decoded.size());
+    for (std::pair<venezia::Token&, venezia::Token&> element : std::views::zip(expected, decoded)) {
+        EXPECT_EQ(element.first.which(), element.second.which());
+    }
+}
+
 int
 main(int argc, char** argv) {
     testing::InitGoogleTest(&argc, argv);
