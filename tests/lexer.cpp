@@ -247,6 +247,51 @@ namespace keyword {
 
         ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
     }
+
+    TEST(LEX, IF) {
+        std::string s = "if";
+
+        venezia::token::keyword::If decoded;
+        venezia::lexer::keyword::ifp<std::string::iterator> grammar;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
+
+    TEST(LEX, ELSE) {
+        std::string s = "else";
+
+        venezia::token::keyword::Else decoded;
+        venezia::lexer::keyword::elsep<std::string::iterator> grammar;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
+
+    TEST(LEX, TRUE) {
+        std::string s = "true";
+
+        venezia::token::keyword::True decoded;
+        venezia::lexer::keyword::truep<std::string::iterator> grammar;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
+
+    TEST(LEX, FALSE) {
+        std::string s = "false";
+
+        venezia::token::keyword::False decoded;
+        venezia::lexer::keyword::falsep<std::string::iterator> grammar;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
+
+    TEST(LEX, RETURN) {
+        std::string s = "return";
+
+        venezia::token::keyword::Return decoded;
+        venezia::lexer::keyword::returnp<std::string::iterator> grammar;
+
+        ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));
+    }
 } // namespace keyword
 
 TEST(LEX, KEYWORD) {
@@ -256,8 +301,13 @@ TEST(LEX, KEYWORD) {
     };
 
     std::vector<Experiment> experiments {
-          {"fn", venezia::token::keyword::Function{}}
-        , {"let", venezia::token::keyword::Let{}}
+          {    "fn", venezia::token::keyword::Function{}}
+        , {   "let", venezia::token::keyword::Let{}}
+        , {    "if", venezia::token::keyword::If{}}
+        , {  "else", venezia::token::keyword::Else{}}
+        , {  "true", venezia::token::keyword::True{}}
+        , { "false", venezia::token::keyword::False{}}
+        , {"return", venezia::token::keyword::Return{}}
     };
 
     venezia::lexer::keywordp<std::string::const_iterator> grammar;
@@ -394,6 +444,28 @@ TEST(LEX, SOURCE) {
         , venezia::token::Identifier{"ten"}
         , venezia::token::parentheses::Right{}
         , venezia::token::delimiter::Semicolon{}
+
+        , venezia::token::keyword::If{}
+        , venezia::token::parentheses::Left{}
+        , venezia::token::Identifier{"5"}
+        , venezia::token::operation::Lesser{}
+        , venezia::token::Identifier{"10"}
+        , venezia::token::parentheses::Right{}
+        , venezia::token::brace::Left{}
+
+        , venezia::token::keyword::Return{}
+        , venezia::token::keyword::True{}
+        , venezia::token::delimiter::Semicolon{}
+
+        , venezia::token::brace::Right{}
+        , venezia::token::keyword::Else{}
+        , venezia::token::brace::Left{}
+
+        , venezia::token::keyword::Return{}
+        , venezia::token::keyword::False{}
+        , venezia::token::delimiter::Semicolon{}
+
+        , venezia::token::brace::Right{}
     };
     venezia::Tokens  decoded;
 
@@ -406,6 +478,12 @@ TEST(LEX, SOURCE) {
         "};"
         ""
         "let result = add(five, ten);"
+        ""
+        "if (5 < 10) {"
+        "   return true;"
+        "} else {"
+        "   return false;"
+        "}"
         ;
     venezia::lexer::lexersp<std::string::iterator> grammar;
     ASSERT_TRUE(qi::parse(s.begin(), s.end(), grammar, decoded));

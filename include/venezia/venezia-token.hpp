@@ -136,8 +136,51 @@ namespace keyword {
             return os << "let";
         }
     };
+
+    struct True {
+        friend std::ostream&
+        operator<<(std::ostream& os, const True&) {
+            return os << "true";
+        }
+    };
+
+    struct False {
+        friend std::ostream&
+        operator<<(std::ostream& os, const False&) {
+            return os << "false";
+        }
+    };
+
+    struct If {
+        friend std::ostream&
+        operator<<(std::ostream& os, const If&) {
+            return os << "if";
+        }
+    };
+
+    struct Else {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Else&) {
+            return os << "else";
+        }
+    };
+
+    struct Return {
+        friend std::ostream&
+        operator<<(std::ostream& os, const Return&) {
+            return os << "return";
+        }
+    };
 } // namespace keyword
-    using Keyword = boost::variant<keyword::Function, keyword::Let>;
+    using Keyword = boost::variant<
+          keyword::Function
+        , keyword::Let
+        , keyword::True
+        , keyword::False
+        , keyword::If
+        , keyword::Else
+        , keyword::Return
+    >;
 
     struct Identifier {
         std::string content;

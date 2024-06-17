@@ -214,15 +214,73 @@ namespace keyword {
 
         qi::rule<Iterator, token::keyword::Let> rule;
     };
+
+    template <typename Iterator>
+    struct truep : qi::grammar<Iterator, token::keyword::True> {
+        truep() : truep::base_type(rule) {
+            rule = "true" >> qi::attr(token::keyword::True{});
+        }
+
+        qi::rule<Iterator, token::keyword::True> rule;
+    };
+
+    template <typename Iterator>
+    struct falsep : qi::grammar<Iterator, token::keyword::False> {
+        falsep() : falsep::base_type(rule) {
+            rule = "false" >> qi::attr(token::keyword::False{});
+        }
+
+        qi::rule<Iterator, token::keyword::False> rule;
+    };
+
+    template <typename Iterator>
+    struct ifp : qi::grammar<Iterator, token::keyword::If> {
+        ifp() : ifp::base_type(rule) {
+            rule = "if" >> qi::attr(token::keyword::If{});
+        }
+
+        qi::rule<Iterator, token::keyword::If> rule;
+    };
+
+    template <typename Iterator>
+    struct elsep : qi::grammar<Iterator, token::keyword::Else> {
+        elsep() : elsep::base_type(rule) {
+            rule = "else" >> qi::attr(token::keyword::Else{});
+        }
+
+        qi::rule<Iterator, token::keyword::Else> rule;
+    };
+
+    template <typename Iterator>
+    struct returnp : qi::grammar<Iterator, token::keyword::Return> {
+        returnp() : returnp::base_type(rule) {
+            rule = "return" >> qi::attr(token::keyword::Return{});
+        }
+
+        qi::rule<Iterator, token::keyword::Return> rule;
+    };
 } // namespace keyword
     template <typename Iterator>
     struct keywordp : qi::grammar<Iterator, token::Keyword> {
         keywordp() : keywordp::base_type(rule) {
-            rule = function | let;
+            rule = function 
+                | let
+                | truep
+                | falsep
+                | ifp
+                | elsep
+                | returnp
+                ;
         }
 
-        keyword::functionp<Iterator>        function;
-        keyword::letp<Iterator>             let;
+        keyword::functionp<Iterator>    function;
+        keyword::letp<Iterator>         let;
+        keyword::truep<Iterator>        truep;
+        keyword::falsep<Iterator>       falsep;
+        keyword::ifp<Iterator>          ifp;
+        keyword::elsep<Iterator>        elsep;
+        keyword::returnp<Iterator>      returnp;
+
         qi::rule<Iterator, token::Keyword>  rule;
     };
 
